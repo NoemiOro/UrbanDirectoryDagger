@@ -1,8 +1,5 @@
 package me.erika.urbandirectory.network;
 
-import java.util.List;
-
-import me.erika.urbandirectory.model.DefinitionDO;
 import me.erika.urbandirectory.model.DefinitionsList;
 import retrofit2.Call;
 import retrofit2.http.GET;
