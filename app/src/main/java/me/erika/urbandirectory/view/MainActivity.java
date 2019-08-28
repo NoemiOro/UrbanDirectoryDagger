@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import me.erika.urbandirectory.R;
 import android.os.Bundle;
 
+/***
+ Description: Urban Dictionary Hub Activity
+ Author: Erika Orozco
+ ***/
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -11,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Load SearchFragment
         SearchFragment firstFragment = new SearchFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, firstFragment).commit();

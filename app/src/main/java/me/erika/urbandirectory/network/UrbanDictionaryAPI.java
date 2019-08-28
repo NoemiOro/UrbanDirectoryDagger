@@ -6,7 +6,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
-//Urban Dictionary API Endpoint
+/***
+ Description: Urban Dictionary API Endpoint
+ Author: Erika Orozco
+ ***/
 public interface UrbanDictionaryAPI {
 
     //key and  host are the headers required by the API

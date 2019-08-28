@@ -4,6 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/***
+ Description: Class to access the list within DefinitionDO
+ Author: Erika Orozco
+ ***/
 public class DefinitionsList {
 
     @SerializedName("list")

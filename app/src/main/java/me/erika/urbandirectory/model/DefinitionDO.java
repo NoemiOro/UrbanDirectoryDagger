@@ -2,6 +2,10 @@ package me.erika.urbandirectory.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/***
+ Description: POJO to keep definitions retrieved by  service.
+ Author: Erika Orozco
+ ***/
 public class DefinitionDO {
 
     private String definition;
