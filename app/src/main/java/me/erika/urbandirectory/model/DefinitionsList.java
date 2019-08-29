@@ -2,6 +2,7 @@ package me.erika.urbandirectory.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /***
@@ -11,7 +12,7 @@ import java.util.List;
 public class DefinitionsList {
 
     @SerializedName("list")
-    private List<DefinitionDO> definitions;
+    private List<DefinitionDO> definitions = new ArrayList<>();
 
     public void setDefinitions(List<DefinitionDO> definitions) {
         this.definitions = definitions;

@@ -1,13 +1,17 @@
 package me.erika.urbandirectory.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -30,6 +34,7 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
     private ImageButton mSearchButton;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
+    private Spinner mSpinner;
     private DefinitionsAdapter mDefinitionsAdapter;
 
     @Override
@@ -41,6 +46,8 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
         mSearchButton = v.findViewById(R.id.imageButton);
         mProgressBar = v.findViewById(R.id.progressBar);
         mRecyclerView = v.findViewById(R.id.recyclerView);
+        mSpinner = v.findViewById(R.id.spinner);
+
 
         //Set fragment as life cycle owner
         definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
@@ -54,10 +61,22 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
         mRecyclerView.setAdapter(mDefinitionsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false) );
 
+        setUpSpinner();
+
         return v;
 
     }
 
+    //Observe list with live data
+    private Observer mObserver = new Observer<DefinitionsList>() {
+        @Override
+        public void onChanged(DefinitionsList definitionsList) {
+            mProgressBar.setVisibility(View.GONE);
+            mDefinitionsAdapter.setDefinitions(definitionsList.getDefinitions());
+        }
+    };
+
+    //Loaad search from vallue inserted
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -65,17 +84,29 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
             mProgressBar.setVisibility(View.VISIBLE);
             //Make DefinitionsList observable to refresh every time term changes
             // Let the view model know something happened.
-            definitions.getDefinition(term)
-                    .observe(SearchFragment.this, new Observer<DefinitionsList>() {
-                        @Override
-                        public void onChanged(DefinitionsList definitionsList) {
-                            Log.v("LiveDataAndy", definitionsList.toString());
-                            mProgressBar.setVisibility(View.GONE);
-                            mDefinitionsAdapter.setDefinitions(definitionsList.getDefinitions());
-                        }
-                    });
+           definitions.getDefinition(term).observe(SearchFragment.this,mObserver);
         }
     };
 
 
+    private void setUpSpinner(){
+
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add(getResources().getString(R.string.spinner_thumbs_up));
+        arrayList.add(getResources().getString(R.string.spinner_thumbs_down));
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, arrayList);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(arrayAdapter);
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String sortBy = parent.getItemAtPosition(position).toString();
+                definitions.sortThumbs(sortBy);
+            }
+            @Override
+            public void onNothingSelected(AdapterView <?> parent) {
+            }
+        });
+    }
 }
