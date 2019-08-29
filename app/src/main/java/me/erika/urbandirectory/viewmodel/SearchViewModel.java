@@ -33,6 +33,10 @@ public class SearchViewModel extends ViewModel {
         return mDefinitionsList;
     }
 
+    public void sortThumps(){
+
+    }
+
     private DefinitionRepository.Callbacks mCallbacks = new DefinitionRepository.Callbacks() {
         @Override
         public void onResponse(DefinitionsList list) {

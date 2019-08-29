@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -25,9 +26,10 @@ import me.erika.urbandirectory.viewmodel.SearchViewModel;
 public class SearchFragment extends Fragment implements LifecycleOwner {
 
     private SearchViewModel definitions;
-    private EditText termEditText;
-    private ImageButton searchButton;
+    private EditText mTermEditText;
+    private ImageButton mSearchButton;
     private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
     private DefinitionsAdapter mDefinitionsAdapter;
 
     @Override
@@ -35,10 +37,10 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.search_fragment, container, false);
 
-        termEditText = v.findViewById(R.id.termEditText);
-        searchButton = v.findViewById(R.id.imageButton);
+        mTermEditText = v.findViewById(R.id.termEditText);
+        mSearchButton = v.findViewById(R.id.imageButton);
+        mProgressBar = v.findViewById(R.id.progressBar);
         mRecyclerView = v.findViewById(R.id.recyclerView);
-
 
         //Set fragment as life cycle owner
         definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
@@ -47,7 +49,7 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
             definitions.init();
         }
 
-        searchButton.setOnClickListener(mOnClickListener);
+        mSearchButton.setOnClickListener(mOnClickListener);
         mDefinitionsAdapter = new DefinitionsAdapter();
         mRecyclerView.setAdapter(mDefinitionsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false) );
@@ -59,8 +61,8 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String term = termEditText.getText().toString();
-
+            String term = mTermEditText.getText().toString();
+            mProgressBar.setVisibility(View.VISIBLE);
             //Make DefinitionsList observable to refresh every time term changes
             // Let the view model know something happened.
             definitions.getDefinition(term)
@@ -68,6 +70,7 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
                         @Override
                         public void onChanged(DefinitionsList definitionsList) {
                             Log.v("LiveDataAndy", definitionsList.toString());
+                            mProgressBar.setVisibility(View.GONE);
                             mDefinitionsAdapter.setDefinitions(definitionsList.getDefinitions());
                         }
                     });
