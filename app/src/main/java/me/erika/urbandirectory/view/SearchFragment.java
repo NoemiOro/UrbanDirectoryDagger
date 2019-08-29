@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -20,22 +21,43 @@ import me.erika.urbandirectory.viewmodel.SearchViewModel;
  ***/
 public class SearchFragment extends Fragment implements LifecycleOwner {
 
+    private SearchViewModel definitions;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.search_fragment, container, false);
 
-        //Set fragment as life cycle owner and connect it with its ViewModel
-        SearchViewModel definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
-        //Make DefinitionsList observable to refresh every time term changes
-        definitions.getDefinition("strawberry").observe(this, new Observer<DefinitionsList>() {
+        final String term;
+        final ImageButton button = (ImageButton) v.findViewById(R.id.imageButton);
+
+        //Set fragment as life cycle owner
+        definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
+        if (savedInstanceState == null) {
+            definitions.init();
+        }
+
+
+
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(DefinitionsList definitionsList) {
-                Log.v("LiveDataAndy", definitionsList.toString());
+            public void onClick(View v) {
+               // term = .getText();
+
+                //Make DefinitionsList observable to refresh every time term changes
+                // Let the view model know something happened.
+                definitions.getDefinition("strawberry")
+                        .observe(SearchFragment.this, new Observer<DefinitionsList>() {
+                            @Override
+                            public void onChanged(DefinitionsList definitionsList) {
+                                Log.v("LiveDataAndy", definitionsList.toString());
+                            }
+                        });
             }
         });
 
 
-        return inflater.inflate(R.layout.search_fragment, container, false);
+        return v;
 
     }
 

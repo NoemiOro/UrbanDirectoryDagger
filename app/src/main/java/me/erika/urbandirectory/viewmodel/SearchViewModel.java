@@ -15,16 +15,20 @@ Description: Class in charge of handling definition search and thumbs sorting
 public class SearchViewModel extends ViewModel {
 
     private MutableLiveData<DefinitionsList> mDefinitionsList;
-    private DefinitionRepository repo = new DefinitionRepository();
+    private DefinitionRepository repo;
 
-    //Retrieving info from repository
+    //One time initialization
+    public void init(){
+        repo = new DefinitionRepository();
+        repo.setCallbacks(mCallbacks);
+        mDefinitionsList = new MutableLiveData<>();
+
+    }
+
+    //Retrieving definitions from repository
     public LiveData<DefinitionsList> getDefinition(String term){
-        //If it is the first time
-        if(mDefinitionsList==null){
-            mDefinitionsList = new MutableLiveData<>();
-            repo.setCallbacks(mCallbacks);
-            repo.loadData(term);
-        }
+
+        repo.loadData(term);
 
         return mDefinitionsList;
     }
@@ -32,7 +36,7 @@ public class SearchViewModel extends ViewModel {
     private DefinitionRepository.Callbacks mCallbacks = new DefinitionRepository.Callbacks() {
         @Override
         public void onResponse(DefinitionsList list) {
-            Log.v("Test","liset" + list);
+            Log.v("Test","list" + list);
             //Post value to UI with liveData
             mDefinitionsList.postValue(list);
         }

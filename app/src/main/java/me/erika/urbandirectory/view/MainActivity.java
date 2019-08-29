@@ -16,9 +16,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Load SearchFragment
-        SearchFragment firstFragment = new SearchFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, firstFragment).commit();
+        if(savedInstanceState==null) {
+            SearchFragment firstFragment = new SearchFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit();
+        }
 
 
     }
