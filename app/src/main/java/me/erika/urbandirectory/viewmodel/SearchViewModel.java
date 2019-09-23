@@ -21,6 +21,10 @@ public class SearchViewModel extends ViewModel {
     private DefinitionsList mList = new DefinitionsList();
     private DefinitionRepository repo;
 
+    public SearchViewModel(){
+        DefinitionRepository repo;
+    }
+
     //One time initialization
     public void init(){
         repo = new DefinitionRepository();
@@ -40,6 +44,10 @@ public class SearchViewModel extends ViewModel {
 
         quickSort(mList, 0, mList.getDefinitions().size()-1, sortBy);
         mDefinitionsList.postValue(mList);
+    }
+
+    public LiveData<DefinitionsList> loadDefinitions(){
+        return mDefinitionsList;
     }
 
 

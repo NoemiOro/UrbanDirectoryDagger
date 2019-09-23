@@ -52,9 +52,14 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
         //Set fragment as life cycle owner
         definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
 
+
         if (savedInstanceState == null) {
             definitions.init();
         }
+
+        //Call observer to load definitions, this should be after mDefinitionsList is initialized
+        definitions.loadDefinitions().observe(SearchFragment.this, mObserver);
+
 
         mSearchButton.setOnClickListener(mOnClickListener);
         mDefinitionsAdapter = new DefinitionsAdapter();
@@ -76,7 +81,7 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
         }
     };
 
-    //Loaad search from vallue inserted
+    //Load search from value inserted
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
