@@ -49,7 +49,7 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
         mSpinner = v.findViewById(R.id.spinner);
 
 
-        //Set fragment as life cycle owner
+        //Reference to viewModel
         definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
 
 

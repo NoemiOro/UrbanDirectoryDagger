@@ -21,9 +21,9 @@ public class SearchViewModel extends ViewModel {
     private DefinitionsList mList = new DefinitionsList();
     private DefinitionRepository repo;
 
-    public SearchViewModel(){
-        DefinitionRepository repo;
-    }
+//    public SearchViewModel(){
+//        DefinitionRepository repo;
+//    }
 
     //One time initialization
     public void init(){
@@ -93,9 +93,9 @@ public class SearchViewModel extends ViewModel {
             DefinitionDO tmp = list.get(i + 1);
             list.set(i + 1, list.get(high));
             list.set(high, tmp);
-        } else {
+        }
+        else {
             int pivot = list.get(high).getThumbsDown();
-
             for (int j = low; j < high; j++) {
                 if (list.get(j).getThumbsDown() < pivot) {
                     i++;

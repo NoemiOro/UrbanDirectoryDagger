@@ -2,6 +2,11 @@ package me.erika.urbandirectory.model;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import me.erika.urbandirectory.di.component.DaggerUrbanDictionaryComponent;
+import me.erika.urbandirectory.di.component.UrbanDictionaryComponent;
 import me.erika.urbandirectory.network.UrbanDictionaryAPI;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,17 +22,28 @@ public class DefinitionRepository {
 
     private Callbacks mCallbacks;
 
+    UrbanDictionaryAPI service;
+
     //load data from service
     public void loadData(String term) {
+
+        //////Before Dagger2//////
+        /*GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
 
         //build service call
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://mashape-community-urban-dictionary.p.rapidapi.com")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         //API Endpoint implementation
-        UrbanDictionaryAPI service = retrofit.create(UrbanDictionaryAPI.class);
+        UrbanDictionaryAPI service = retrofit.create(UrbanDictionaryAPI.class); */
+
+        UrbanDictionaryComponent daggerUrbanDictionaryComponent  = DaggerUrbanDictionaryComponent.builder().build();
+
+        service = daggerUrbanDictionaryComponent.urbanDictionaryService();
+
 
         Call<DefinitionsList> definitions = service.listDefinitions(term);
 
