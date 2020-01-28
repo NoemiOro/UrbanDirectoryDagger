@@ -1,5 +1,6 @@
 package me.erika.urbandirectory.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +14,18 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import dagger.android.AndroidInjection;
 import me.erika.urbandirectory.R;
+import me.erika.urbandirectory.di.DaggerViewModelFactory;
+import me.erika.urbandirectory.di.application.UrbanDirectoryApplication;
 import me.erika.urbandirectory.model.DefinitionsList;
 import me.erika.urbandirectory.viewmodel.SearchViewModel;
 
@@ -29,7 +35,12 @@ import me.erika.urbandirectory.viewmodel.SearchViewModel;
  ***/
 public class SearchFragment extends Fragment implements LifecycleOwner {
 
-    private SearchViewModel definitions;
+    @Inject
+    DaggerViewModelFactory viewModelFactory;
+    SearchViewModel definitions;
+
+
+    //private SearchViewModel definitions;
     private EditText mTermEditText;
     private ImageButton mSearchButton;
     private RecyclerView mRecyclerView;
@@ -38,8 +49,17 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
     private DefinitionsAdapter mDefinitionsAdapter;
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        //to add the fragment/activty to the graph
+        ((UrbanDirectoryApplication)(getActivity()).getApplication())
+                .getUrbanDictionaryApplicationComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.search_fragment, container, false);
 
         mTermEditText = v.findViewById(R.id.termEditText);
@@ -48,9 +68,11 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
         mRecyclerView = v.findViewById(R.id.recyclerView);
         mSpinner = v.findViewById(R.id.spinner);
 
-
         //Reference to viewModel
-        definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
+        //before dagger2
+        //definitions = ViewModelProviders.of(this).get(SearchViewModel.class);
+        //after dagger2
+        definitions = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel.class);
 
 
         if (savedInstanceState == null) {

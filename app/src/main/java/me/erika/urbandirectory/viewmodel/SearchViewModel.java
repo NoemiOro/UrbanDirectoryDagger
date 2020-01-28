@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,15 +21,22 @@ public class SearchViewModel extends ViewModel {
 
     private MutableLiveData<DefinitionsList> mDefinitionsList;
     private DefinitionsList mList = new DefinitionsList();
-    private DefinitionRepository repo;
 
-//    public SearchViewModel(){
-//        DefinitionRepository repo;
-//    }
+   // @Inject
+    DefinitionRepository repo;
+
+    //Dagger2 injecting repository to viewmodel
+    //You use the @Inject annotation to define a dependency. If you annotate a constructor with @Inject, Dagger 2 can also use an instance of this object to fulfill dependencies. This was done to avoid the definition of lots of @Provides methods for these objects.
+    // https://www.vogella.com/tutorials/Dagger/article.html
+    @Inject
+    public SearchViewModel(DefinitionRepository repo) {
+        this.repo = repo;
+    }
 
     //One time initialization
     public void init(){
-        repo = new DefinitionRepository();
+        //before dagger2
+        //repo = new DefinitionRepository();
         repo.setCallbacks(mCallbacks);
         mDefinitionsList = new MutableLiveData<>();
 

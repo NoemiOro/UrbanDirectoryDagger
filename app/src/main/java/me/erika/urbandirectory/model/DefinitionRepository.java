@@ -5,8 +5,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.inject.Inject;
+
+import me.erika.urbandirectory.di.application.UrbanDirectoryApplication;
 import me.erika.urbandirectory.di.component.DaggerUrbanDictionaryComponent;
 import me.erika.urbandirectory.di.component.UrbanDictionaryComponent;
+import me.erika.urbandirectory.di.module.UrbanDictionaryModule;
 import me.erika.urbandirectory.network.UrbanDictionaryAPI;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +28,12 @@ public class DefinitionRepository {
 
     UrbanDictionaryAPI service;
 
+    private DefinitionRepository(){}
+
+    public DefinitionRepository(UrbanDictionaryAPI service) {
+        this.service = service;
+    }
+
     //load data from service
     public void loadData(String term) {
 
@@ -40,9 +50,10 @@ public class DefinitionRepository {
         //API Endpoint implementation
         UrbanDictionaryAPI service = retrofit.create(UrbanDictionaryAPI.class); */
 
-        UrbanDictionaryComponent daggerUrbanDictionaryComponent  = DaggerUrbanDictionaryComponent.builder().build();
 
-        service = daggerUrbanDictionaryComponent.urbanDictionaryService();
+        //moved injection to constructor
+       // UrbanDictionaryComponent daggerUrbanDictionaryComponent  = DaggerUrbanDictionaryComponent.builder().build();
+        //service = daggerUrbanDictionaryComponent.urbanDictionaryService();
 
 
         Call<DefinitionsList> definitions = service.listDefinitions(term);
