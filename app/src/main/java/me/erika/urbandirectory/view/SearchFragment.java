@@ -26,6 +26,7 @@ import dagger.android.AndroidInjection;
 import me.erika.urbandirectory.R;
 import me.erika.urbandirectory.di.DaggerViewModelFactory;
 import me.erika.urbandirectory.di.application.UrbanDirectoryApplication;
+import me.erika.urbandirectory.di.module.MainFragmentModule;
 import me.erika.urbandirectory.model.DefinitionsList;
 import me.erika.urbandirectory.viewmodel.SearchViewModel;
 
@@ -37,6 +38,10 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
 
     @Inject
     DaggerViewModelFactory viewModelFactory;
+
+    @Inject
+    DefinitionsAdapter mDefinitionsAdapter;
+
     SearchViewModel definitions;
 
 
@@ -46,14 +51,18 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private Spinner mSpinner;
-    private DefinitionsAdapter mDefinitionsAdapter;
+   // private DefinitionsAdapter mDefinitionsAdapter;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         //to add the fragment/activty to the graph
         ((UrbanDirectoryApplication)(getActivity()).getApplication())
-                .getUrbanDictionaryApplicationComponent().inject(this);
+                .getUrbanDictionaryApplicationComponent()
+                .newMainFragmentComponent(new MainFragmentModule())
+                .injectMainFragment(this);
+
+        
     }
 
     @Override
@@ -84,7 +93,7 @@ public class SearchFragment extends Fragment implements LifecycleOwner {
 
 
         mSearchButton.setOnClickListener(mOnClickListener);
-        mDefinitionsAdapter = new DefinitionsAdapter();
+       // mDefinitionsAdapter = new DefinitionsAdapter();
         mRecyclerView.setAdapter(mDefinitionsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false) );
 
